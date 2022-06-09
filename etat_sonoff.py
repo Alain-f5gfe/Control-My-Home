@@ -26,9 +26,9 @@ sonoffIP = {
 "Sonde Garage":["http://192.168.1.143/json?view=sensorupdate&tasknr=2", "etat"],
 "Cloture Electrique":["http://192.168.1.29/json?view=sensorupdate&tasknr=1", "etat"],
 "Pompe Arrosage":["http://192.168.1.142/json?view=sensorupdate&tasknr=1", "etat"],
-"NC":["http://192.168.1.142/json?view=sensorupdate&tasknr=2", "etat"],
+"Prise Cave":["http://192.168.1.142/json?view=sensorupdate&tasknr=2", "etat"],
 "Lampe PC":["http://192.168.1.144/json?view=sensorupdate&tasknr=1", "etat"],
-"NC Bureau":["http://192.168.1.144/json?view=sensorupdate&tasknr=2", "etat"],
+"Prise Bureau":["http://192.168.1.144/json?view=sensorupdate&tasknr=2", "etat"],
 "Alim 12V":["http://192.168.1.27/json?view=sensorupdate&tasknr=1", "etat"]
 } 
 
@@ -48,6 +48,7 @@ for inter in sonoffIP.keys():
         #print(sonoffIP.get(inter)[1])# affiche l'état du capteur avec 0 ou 1
         # forme de la requète: print("état pi-star ", sonoffIP.get("Pi-Star")[1])
     except:
+        sonoffIP[inter][1] = "NC" # Si pas de connexion sauve NC
         pass
 
 def lecture_mesure(ip, bloc=1):
@@ -72,16 +73,16 @@ def lecture_mesure(ip, bloc=1):
         return infos
     
     except requests.exceptions.RequestException as err:
-        print ("OOps: Something Else",err)
+        print ("Oups: Ca marche pas! ",err)
         pass
     except requests.exceptions.HTTPError as errh:
-        print ("Http Error:",errh)
+        print ("Http Erreur:",errh)
         pass
     except requests.exceptions.ConnectionError as errc:
-        print ("Error Connecting:",errc)
+        print ("Erreur connexion:",errc)
         pass
     except requests.exceptions.Timeout as errt:
-        print ("Timeout Error:",errt)
+        print ("Hors délai: ",errt)
         pass    
 
     '''
@@ -103,9 +104,9 @@ def send_ordre_on(name):
     "Sonde Garage":"http://192.168.1.143/control?cmd=gpio,5,1",
     "Cloture Electrique":"http://192.168.1.29/control?cmd=gpio,12,1",
     "Pompe Arrosage":"http://192.168.1.142/control?cmd=gpio,12,1",
-    "NC":"http://192.168.1.142/control?cmd=gpio,5,1",
+    "Prise Cave":"http://192.168.1.142/control?cmd=gpio,5,1",
     "Lampe PC":"http://192.168.1.144/control?cmd=gpio,12,1",
-    "NC Bureau":"http://192.168.1.144/control?cmd=gpio,5,1",
+    "Prise Bureau":"http://192.168.1.144/control?cmd=gpio,5,1",
     "Alim 12V":"http://192.168.1.27/control?cmd=gpio,12,1"
     }
     cible = convert_name_ordre_on[name]
@@ -118,9 +119,9 @@ def send_ordre_off(name):
     "Sonde Garage":"http://192.168.1.143/control?cmd=gpio,5,0",
     "Cloture Electrique":"http://192.168.1.29/control?cmd=gpio,12,0",
     "Pompe Arrosage":"http://192.168.1.142/control?cmd=gpio,12,0",
-    "NC":"http://192.168.1.142/control?cmd=gpio,5,0",
+    "Prise cave":"http://192.168.1.142/control?cmd=gpio,5,0",
     "Lampe PC":"http://192.168.1.144/control?cmd=gpio,12,0",
-    "NC Bureau":"http://192.168.1.144/control?cmd=gpio,5,0",
+    "Prise Bureau":"http://192.168.1.144/control?cmd=gpio,5,0",
     "Alim 12V":"http://192.168.1.27/control?cmd=gpio,12,0"
     }
     cible = convert_name_ordre_off[name]
